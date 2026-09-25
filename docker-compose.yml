@@ -1,0 +1,82 @@
+# Defines the local deployment for all seven e-commerce services.
+services:
+  # Product catalog service.
+  product-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: product_service.js
+    # Maps the product API to the host.
+    ports:
+      - "3001:3001"
+  # Inventory service.
+  inventory-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: inventory_service.js
+    # Maps the inventory API to the host.
+    ports:
+      - "3002:3002"
+  # Cart service.
+  cart-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: cart_service.js
+    # Maps the cart API to the host.
+    ports:
+      - "3003:3003"
+  # Order service.
+  order-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: order_service.js
+    # Connects the order service to the other services by container DNS names.
+    environment:
+      INVENTORY_URL: http://inventory-service:3002
+      PAYMENT_URL: http://payment-service:3005
+      SHIPPING_URL: http://shipping-service:3006
+    # Maps the order API to the host.
+    ports:
+      - "3004:3004"
+    # Starts dependencies before the order service.
+    depends_on:
+      - inventory-service
+      - payment-service
+      - shipping-service
+  # Payment service.
+  payment-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: payment_service.js
+    # Maps the payment API to the host.
+    ports:
+      - "3005:3005"
+  # Shipping service.
+  shipping-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: shipping_service.js
+    # Maps the shipping API to the host.
+    ports:
+      - "3006:3006"
+  # User service.
+  user-service:
+    # Builds the shared service image.
+    build:
+      context: .
+      args:
+        SERVICE_FILE: user_service.js
+    # Maps the user API to the host.
+    ports:
+      - "3007:3007"

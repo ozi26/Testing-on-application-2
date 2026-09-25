@@ -1,0 +1,6 @@
+# Excludes local dependencies from the Docker build context.
+node_modules
+# Excludes test coverage from the Docker build context.
+coverage
+# Excludes Git metadata.
+.git

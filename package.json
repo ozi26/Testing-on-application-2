@@ -1,0 +1,25 @@
+{
+  "name": "configuration-aware-ecommerce-microservices",
+  "version": "1.0.0",
+  "description": "Seven-service JavaScript e-commerce prototype with unit and integration tests.",
+  "main": "sample_microservices/product_service.js",
+  "scripts": {
+    "test": "jest --runInBand --coverage",
+    "test:quick": "jest --runInBand",
+    "start:product": "node sample_microservices/product_service.js",
+    "start:inventory": "node sample_microservices/inventory_service.js",
+    "start:cart": "node sample_microservices/cart_service.js",
+    "start:order": "node sample_microservices/order_service.js",
+    "start:payment": "node sample_microservices/payment_service.js",
+    "start:shipping": "node sample_microservices/shipping_service.js",
+    "start:user": "node sample_microservices/user_service.js",
+    "smoke": "node scripts/smoke_test.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "jest": "^30.1.3",
+    "supertest": "^7.1.4"
+  }
+}

@@ -1,0 +1,62 @@
+# Ignore installed Node.js dependencies.
+node_modules/
+# Ignore Jest coverage output.
+coverage/
+# Ignore local environment files.
+.env
+.env.*
+# Ignore operating-system metadata.
+.DS_Store
+Thumbs.db
+# Ignore local logs.
+*.log
+#######
+# Ignore Python virtual environments.
+.venv/
+# Ignore Python cache files.
+__pycache__/
+# Ignore pytest cache files.
+.pytest_cache/
+# Ignore generated analyzer reports.
+tia-report.json
+trace-map.json
+# Ignore Python bytecode files.
+*.pyc
+# Ignore analyzer result files.
+analyzer_result.json
+
+# JavaScript
+node_modules/
+coverage/
+*.log
+
+# Multi-language test outputs
+test_dependencies.json
+###
+.DS_Store
+.eclipse.buildship.core.prefs
+.gradle/
+.idea/
+.kubernetes-manifests-*/
+.project
+.skaffold-*.yaml
+.terraform.lock.hcl
+.terraform/*
+.vs/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.pyc
+*.swp
+*.tfstate*
+*.tfvars
+*~
+bin/
+build/
+Dockerfile.pip
+obj/
+pkg/
+release/wi-kubernetes-manifests.yaml
+vendor/
+gha-creds-*.json
