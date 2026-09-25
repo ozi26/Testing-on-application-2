@@ -1,4 +1,5 @@
 // Product Service: exposes a small product catalog for the e-commerce prototype.
+
 const express = require("express"); // Imports Express so the service can expose HTTP endpoints.
 const config = require("./config/product.config"); // Loads product-service configuration from the shared config folder.
 

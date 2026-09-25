@@ -1,4 +1,5 @@
 // Order Service: coordinates product, inventory, payment and shipping operations.
+
 const express = require("express"); // Imports Express for HTTP routing.
 const config = require("./config/order.config"); // Loads order-service configuration.
 

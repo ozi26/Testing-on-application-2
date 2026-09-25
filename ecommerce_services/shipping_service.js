@@ -1,4 +1,5 @@
 // Shipping Service: creates and tracks simple delivery records.
+
 const express = require("express"); // Imports Express for HTTP routing.
 const config = require("./config/shipping.config"); // Loads shipping-service configuration.
 

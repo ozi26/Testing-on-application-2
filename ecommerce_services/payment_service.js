@@ -1,4 +1,5 @@
 // Payment Service: simulates payment authorization without connecting to a real bank.
+
 const express = require("express"); // Imports Express for HTTP endpoints.
 const config = require("./config/payment.config"); // Loads payment-service configuration.
 

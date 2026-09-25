@@ -1,4 +1,5 @@
 // User Service: registers customers and provides basic customer lookup.
+
 const express = require("express"); // Imports Express for HTTP endpoints.
 const config = require("./config/user.config"); // Loads user-service configuration.
 

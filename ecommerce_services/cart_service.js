@@ -1,4 +1,5 @@
 // Cart Service: creates and manages simple shopping carts.
+
 const express = require("express"); // Imports Express for HTTP routing.
 const config = require("./config/cart.config"); // Loads cart-service configuration.
 

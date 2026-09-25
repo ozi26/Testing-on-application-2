@@ -1,4 +1,5 @@
 // Inventory Service: tracks available stock for products in the e-commerce prototype.
+
 const express = require("express"); // Imports Express for HTTP endpoints.
 const config = require("./config/inventory.config"); // Loads inventory-service configuration.
 
