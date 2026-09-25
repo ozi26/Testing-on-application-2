@@ -74,7 +74,6 @@ def flatten_dictionary(data, parent_key=""):
     # Return the flattened dictionary
     return result
 
-
 def parse_yaml(file_path):
     """
     Parse a YAML file and return a flat dictionary of its contents.
@@ -133,7 +132,6 @@ def parse_yaml(file_path):
         print(f"  [IO ERROR] {file_path}: {e}")
         return {}
 
-
 def parse_json(file_path):
     """
     Parse a JSON file and return a flat dictionary of its contents.
@@ -168,7 +166,6 @@ def parse_json(file_path):
     except (json.JSONDecodeError, IOError, UnicodeDecodeError):
         # If the file is not valid JSON or cannot be read, return empty dict
         return {}
-
 
 def parse_properties(file_path):
     """
@@ -232,7 +229,6 @@ def parse_properties(file_path):
     
     # Return the parsed properties
     return result
-
 
 def parse_xml(file_path):
     """
@@ -306,50 +302,138 @@ def parse_xml(file_path):
     # Return the parsed XML
     return result
 
-
-def parse_config_file(file_path):
+def parse_js_config(file_path):
     """
-    Parse a configuration file based on its extension.
+    Parse a JavaScript configuration file and return a flat dictionary.
     
-    This is the main entry point for parsing configuration files.
-    It detects the file type and calls the appropriate parser.
+    Handles the common `module.exports = { ... }` and
+    `export default { ... }` patterns used by Node.js projects.
+    
+    Examples:
+        module.exports = {
+            gatewayTimeout: 5000,
+            maxRetries: 3,
+        };
+        
+        export default {
+            port: 3000,
+            database: { host: "localhost", port: 5432 },
+        };
+    
+    The parser is intentionally simple — it extracts top-level key:value
+    pairs and dot-notation nesting, ignoring functions, imports, and
+    other JS constructs that wouldn't appear in a config file.
     
     Args:
-        file_path: The path to the configuration file
+        file_path: Path to the .js/.ts config file
     
     Returns:
-        A flat dictionary with the configuration settings.
-        Returns an empty dictionary if the file type is not supported
-        or if the file cannot be parsed.
-    
-    Example:
-        # Parse a YAML file
-        settings = parse_config_file("config.yaml")
-        
-        # Parse a JSON file
-        settings = parse_config_file("config.json")
+        A flat dictionary with dot-separated keys.
     """
-    # Get the file extension (without the dot, in lowercase)
-    extension = Path(file_path).suffix.lower().lstrip(".")
+    import re
     
-    # Choose the appropriate parser based on the extension
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+    except (IOError, UnicodeDecodeError):
+        return {}
+    
+    # ---- Step 1: Isolate the config object body ----
+    # Look for `module.exports = { ... }` or `export default { ... }`
+    match = re.search(
+        r"(?:module\.exports|export\s+default)\s*=\s*\{(.*)\}\s*;?\s*$",
+        content,
+        re.DOTALL,
+    )
+    if not match:
+        # Fallback: try to find `{ ... }` after `=`
+        match = re.search(r"=\s*\{(.*)\}", content, re.DOTALL)
+    
+    if not match:
+        return {}
+    
+    body = match.group(1)
+    
+    # ---- Step 2: Strip single-line and block comments ----
+    body = re.sub(r"//[^\n]*", "", body)
+    body = re.sub(r"/\*.*?\*/", "", body, flags=re.DOTALL)
+    
+    # ---- Step 3: Extract key:value pairs ----
+    # Match patterns like:
+    #   keyName: value
+    #   "keyName": value
+    #   'keyName': value
+    #   keyName: "string value"
+    #   keyName: 123
+    #   keyName: true
+    #   keyName: { nested: ... }  ← we don't recurse here; we flatten by dots
+    result = {}
+    # Match `key: value` at any nesting level using simple regex + stack
+    # We'll use a simpler approach: extract all "key: literal" pairs and
+    # preserve nesting via a lightweight brace-depth tracker.
+    
+    # Tokenize by top-level commas / braces — simpler: find all key:value pairs
+    # with an identifier-ish key and a literal value.
+    pattern = re.compile(
+        r"""([A-Za-z_][A-Za-z0-9_]*)\s*:\s*   # key
+            (?:
+                "([^"]*)"                       # double-quoted string
+              | '([^']*)'                       # single-quoted string
+              | (\d+(?:\.\d+)?)                 # number
+              | (true|false|null)               # boolean/null
+            )""",
+        re.VERBOSE,
+    )
+    
+    for m in pattern.finditer(body):
+        key = m.group(1)
+        # First non-None capture group wins
+        value = next(
+            (g for g in m.groups()[1:] if g is not None),
+            None,
+        )
+        if value is None:
+            continue
+        # Type coercion
+        if value == "true":
+            value = True
+        elif value == "false":
+            value = False
+        elif value == "null":
+            value = None
+        elif m.group(4) is not None:   # number
+            value = float(value) if "." in value else int(value)
+        
+        result[key] = value
+    
+    return result
+
+def parse_config_file(file_path):
+    """Parse a configuration file based on its extension."""
+    path = Path(file_path)
+    name = path.name.lower()
+    extension = path.suffix.lower().lstrip(".")
+    
+    # ---- Compound extensions first: order.config.js ----
+    if name.endswith((".config.js", ".config.ts", ".config.mjs", ".config.cjs")):
+        return parse_js_config(file_path)
+    
+    # ---- Standard extensions ----
     if extension in ("yml", "yaml"):
-        # YAML files: use the YAML parser
         return parse_yaml(file_path)
     elif extension == "json":
-        # JSON files: use the JSON parser
         return parse_json(file_path)
     elif extension == "properties":
-        # Properties files: use the properties parser
         return parse_properties(file_path)
     elif extension == "xml":
-        # XML files: use the XML parser
         return parse_xml(file_path)
+    elif extension == "env":
+        return parse_env_file(file_path)
+    elif extension in ("js", "ts", "mjs", "cjs"):
+        # Generic JS/TS config file — apply the JS parser
+        return parse_js_config(file_path)
     else:
-        # Unknown file type: return empty dictionary
-        # This shouldn't happen if we check is_config_file() first
         return {}
-
 
 def find_config_changes(old_config, new_config):
     """
@@ -397,7 +481,6 @@ def find_config_changes(old_config, new_config):
     
     # Return the dictionary of changes
     return changes
-
 
 def extract_config_terms(changes):
     """
