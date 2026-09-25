@@ -6,6 +6,8 @@ const config = require("./config/inventory.config"); // Loads inventory-service 
 const app = express(); // Creates the Express application.
 app.use(express.json()); // Enables JSON request parsing.
 
+// This is just a simple comment to test the analyzer.
+
 const inventory = new Map([ // Creates an in-memory stock table.
   ["p100", 20], // Gives the headphones twenty units.
   ["p101", 15], // Gives the keyboard fifteen units.
