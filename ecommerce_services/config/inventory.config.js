@@ -1,4 +1,5 @@
 // Configuration for the Inventory Service; this file keeps service settings in one central config folder.
+
 module.exports = { // Starts the exported configuration object.
   // Service name used in logs and health responses.
   serviceName: 'Inventory Service', // Sets the service display name.
