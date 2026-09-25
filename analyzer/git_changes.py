@@ -73,35 +73,30 @@ def get_changed_files(repo_path=".", commit_range="HEAD~1..HEAD"):
 
 def categorize_changed_files(changed_files):
     """
-    Separate changed files into source code files and configuration files.
+    Separate changed files into source code and configuration files.
     
-    Args:
-        changed_files: A list of file paths that have changed
+    IMPORTANT: Config detection takes priority. If a file matches a
+    config pattern (e.g., payment.config.js or settings.py), it goes
+    into config_files even if its extension is also a source extension.
     
-    Returns:
-        A tuple of two lists: (source_files, config_files)
-        - source_files: Files with source code extensions
-        - config_files: Files with configuration file extensions
-    
-    Example:
-        files = ["main.py", "config.yaml", "utils.py"]
-        source, config = categorize_changed_files(files)
-        # source is ["main.py", "utils.py"]
-        # config is ["config.yaml"]
+    This handles ambiguous files correctly:
+      - payment.config.js     → config (NOT source)
+      - order_service.js      → source
+      - config.py             → config
+      - utils.py              → source
     """
-    # Create empty lists for each category
+    from analyzer.file_utils import is_config_file, is_source_file
+    
     source_files = []
     config_files = []
     
-    # Loop through each changed file
     for file_path in changed_files:
-        # Check if it's a source code file
-        if is_source_file(file_path):
-            source_files.append(file_path)
-        # Check if it's a configuration file
-        elif is_config_file(file_path):
+        # ---- Config takes priority ----
+        if is_config_file(file_path):
             config_files.append(file_path)
-        # Files that are neither (e.g., README.md) are ignored
+        # ---- Otherwise, check if it's source ----
+        elif is_source_file(file_path):
+            source_files.append(file_path)
+        # ---- Files that are neither (README.md, LICENSE) are ignored ----
     
-    # Return both lists as a tuple
     return source_files, config_files

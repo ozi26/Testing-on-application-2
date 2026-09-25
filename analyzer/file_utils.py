@@ -130,23 +130,56 @@ def get_file_extension(file_path):
 
 def is_config_file(file_path):
     """
-    Check if a file is a configuration file based on its extension.
+    Check if a file is a configuration file, using language-agnostic
+    heuristics based on name patterns and extensions.
+    
+    This function does NOT need to be modified per-project. It works
+    for YAML, JSON, TOML, XML, .env, JavaScript config files
+    (order.config.js), TypeScript configs, .NET configs, and dozens
+    of other conventions out of the box.
     
     Args:
-        file_path: The path to the file
+        file_path: Path to the file (string or Path)
     
     Returns:
-        True if the file has a configuration file extension, False otherwise.
-    
-    Example:
-        is_config_file("config.yaml")     # Returns True
-        is_config_file("order_service.py") # Returns False
+        True if the file appears to be configuration, False otherwise.
     """
-    # Import the CONFIG_EXTENSIONS set from our config module
-    from analyzer.config import CONFIG_EXTENSIONS
+    from analyzer.config import (
+        CONFIG_EXTENSIONS,
+        CONFIG_NAME_MARKERS,
+        CONFIG_FILE_NAMES,
+        SOURCE_EXTENSIONS,
+    )
     
-    # Get the file extension and check if it's in our set of config extensions
-    return get_file_extension(file_path) in CONFIG_EXTENSIONS
+    path = Path(file_path)
+    filename = path.name.lower()
+    extension = path.suffix.lower().lstrip(".")
+    
+    # ---- Rule 1: Exact filename match (package.json, Dockerfile, etc.) ----
+    if filename in CONFIG_FILE_NAMES:
+        return True
+    
+    # ---- Rule 2: Name contains a config marker (.config., .env, etc.) ----
+    # This wins OVER the source extension check, so order.config.js is config.
+    for marker in CONFIG_NAME_MARKERS:
+        if marker in filename:
+            return True
+    
+    # ---- Rule 3: Extension is a known config extension ----
+    # But only if the extension is NOT also a known source extension.
+    # (This handles the .json ambiguity: JSON is usually data, but if a
+    #  file is named config.json, Rule 1 already caught it.)
+    if extension in CONFIG_EXTENSIONS:
+        # If the extension is exclusively a config extension, accept.
+        if extension not in SOURCE_EXTENSIONS:
+            return True
+    
+    # ---- Rule 4: Filename starts with "config" or "settings" ----
+    if filename.startswith(("config", "settings", "conf.")):
+        return True
+    
+    # ---- Otherwise: not a config file ----
+    return False
 
 
 def is_source_file(file_path):
@@ -172,24 +205,32 @@ def is_source_file(file_path):
 
 def is_test_file(file_path):
     """
-    Check if a file is a test file based on common naming patterns.
+    Check if a file is a test file based on language-agnostic name patterns.
+    
+    Works for:
+      - test_order.py, order_test.py         (Python)
+      - OrderTest.java, OrderTests.java      (Java)
+      - order.test.js, order.spec.js         (JavaScript)
+      - order_test.go                        (Go)
+      - order_spec.rb                        (Ruby)
+      - OrderTests.cs                        (.NET)
+      - order.spec.ts                        (TypeScript)
     
     Args:
-        file_path: The path to the file
+        file_path: Path to the file
     
     Returns:
-        True if the file appears to be a test file, False otherwise.
-    
-    Example:
-        is_test_file("test_order.py")        # Returns True
-        is_test_file("order_service_test.py") # Returns True
-        is_test_file("order_service.py")      # Returns False
+        True if the file appears to be a test file.
     """
-    # Import the TEST_FILE_PATTERNS set from our config module
-    from analyzer.config import TEST_FILE_PATTERNS
+    from analyzer.config import TEST_FILE_PATTERNS, SOURCE_EXTENSIONS
     
-    # Get just the filename without the directory path
-    filename = Path(file_path).name
+    path = Path(file_path)
+    filename = path.name.lower()
+    extension = path.suffix.lower().lstrip(".")
     
-    # Check if any of our test patterns appear in the filename
+    # Only files with source-code extensions can be tests
+    if extension not in SOURCE_EXTENSIONS:
+        return False
+    
+    # Check for any test pattern in the filename
     return any(pattern in filename for pattern in TEST_FILE_PATTERNS)

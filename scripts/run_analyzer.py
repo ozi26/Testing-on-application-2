@@ -32,40 +32,38 @@ from analyzer.file_utils import read_text_file
 def find_test_files(test_dir):
     """
     Find all test files in a directory, across any programming language.
-    
-    Uses the TEST_FILE_PATTERNS from analyzer.config to detect tests
-    by filename convention, regardless of extension.
-    
-    Args:
-        test_dir: The directory to search for test files
-    
-    Returns:
-        A list of paths to test files.
+    Uses language-agnostic pattern matching from analyzer.config.
     """
     from analyzer.config import SOURCE_EXTENSIONS, TEST_FILE_PATTERNS
-    from analyzer.file_utils import get_file_extension
+    from analyzer.file_utils import get_file_extension, is_test_file
     
     test_path = Path(test_dir)
-    
     if not test_path.exists():
         return []
     
     test_files = []
     
-    # Walk through every file in the test directory
+    # Recursively walk all files
     for file_path in test_path.rglob("*"):
-        # Skip directories
         if not file_path.is_file():
             continue
         
-        # Skip files with extensions that aren't source-code-like
-        extension = get_file_extension(file_path)
-        if extension not in SOURCE_EXTENSIONS:
+        # Skip node_modules, venv, dist, build, and hidden directories
+        parts = file_path.parts
+        if any(
+            p in parts
+            for p in ("node_modules", "venv", "dist", "build",
+                      ".git", "__pycache__", "coverage")
+        ):
             continue
         
-        # Check if the filename matches any test pattern
-        filename = file_path.name
-        if any(pattern in filename for pattern in TEST_FILE_PATTERNS):
+        # Skip files with unknown extensions
+        ext = get_file_extension(file_path)
+        if ext not in SOURCE_EXTENSIONS:
+            continue
+        
+        # Use the language-agnostic test detector
+        if is_test_file(file_path):
             test_files.append(str(file_path))
     
     return test_files
