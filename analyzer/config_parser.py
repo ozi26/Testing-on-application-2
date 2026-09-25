@@ -408,6 +408,59 @@ def parse_js_config(file_path):
     
     return result
 
+def parse_env_file(file_path):
+    """
+    Parse a .env file and return a flat dictionary.
+    
+    .env files use the format:
+        KEY=value
+        ANOTHER_KEY="quoted value"
+        # Comment lines starting with # are ignored
+    
+    These files are extremely common in Node.js, Python, Ruby, and many
+    other ecosystems for storing environment-specific configuration.
+    
+    Args:
+        file_path: Path to the .env file
+    
+    Returns:
+        A flat dictionary mapping keys to string values.
+        Returns an empty dictionary if the file cannot be read.
+    """
+    result = {}
+    
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                # Strip whitespace
+                line = line.strip()
+                
+                # Skip empty lines and comment lines
+                if not line or line.startswith("#"):
+                    continue
+                
+                # Skip malformed lines without an '='
+                if "=" not in line:
+                    continue
+                
+                # Split at the FIRST '=' only (values may contain '=')
+                key, value = line.split("=", 1)
+                
+                # Strip whitespace from both sides
+                key = key.strip()
+                value = value.strip()
+                
+                # Remove surrounding quotes if present
+                if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
+                    value = value[1:-1]
+                
+                # Add to result
+                result[key] = value
+    except (IOError, UnicodeDecodeError):
+        return {}
+    
+    return result
+
 def parse_config_file(file_path):
     """Parse a configuration file based on its extension."""
     path = Path(file_path)
