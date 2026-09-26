@@ -32,4 +32,5 @@ if (require.main === module) { // Starts the HTTP server only when this file is 
   app.listen(config.port, () => console.log(`${config.serviceName} listening on ${config.port}`)); // Starts the service on the configured port.
 } // Ends the direct-execution check.
 
-module.exports = { app, products }; // Exports the app and data so unit and integration tests can reuse them.
+// Exports the app and data so unit and integration tests can reuse them.
+module.exports = { app, products }; 

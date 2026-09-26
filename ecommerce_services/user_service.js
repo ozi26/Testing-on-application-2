@@ -8,7 +8,9 @@ app.use(express.json()); // Enables JSON request parsing.
 
 const users = new Map(); // Stores customer records in memory.
 
-/** Registers a new customer. */ // Documents the user registration function.
+/** Registers a new customer. */ 
+// Documents the user registration function.
+
 function createUser(req, res) { // Defines the registration handler.
   const { id, name, email } = req.body; // Reads the customer fields from the request.
   if (!id || !name || !email) return res.status(400).json({ error: "id, name and email are required" }); // Validates required fields.
