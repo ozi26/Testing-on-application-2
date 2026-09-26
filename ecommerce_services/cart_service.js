@@ -8,7 +8,10 @@ app.use(express.json()); // Enables JSON request bodies.
 
 const carts = new Map(); // Stores carts by user identifier in memory.
 
-/** Returns the cart belonging to a user. */ // Documents the cart lookup function.
+/** Returns the cart belonging to a user. */ 
+// Documents the cart lookup function.
+// This is just a random comment to test the anayzer..
+
 function getCart(req, res) { // Defines the cart lookup handler.
   const cart = carts.get(req.params.userId) || []; // Reads the cart or returns an empty list.
   return res.json({ userId: req.params.userId, items: cart }); // Sends the cart contents.

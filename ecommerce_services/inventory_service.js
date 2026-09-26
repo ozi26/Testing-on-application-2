@@ -21,7 +21,10 @@ function getStock(req, res) { // Defines the stock lookup handler.
   return res.json({ productId: req.params.productId, quantity: stock }); // Returns the current quantity.
 } // Ends the stock lookup handler.
 
-/** Reserves stock when an order is created. */ // Documents the reservation function.
+/** Reserves stock when an order is created. */ 
+// Documents the reservation function.
+// This is just a random comment to test the analyzer.
+
 function reserveStock(req, res) { // Defines the stock reservation handler.
   const quantity = Number(req.body.quantity); // Converts the requested quantity to a number.
   const current = inventory.get(req.params.productId); // Reads the current quantity.
