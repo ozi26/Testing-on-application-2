@@ -4,7 +4,7 @@ module.exports = { // Starts the exported configuration object.
   // Service name used in logs and health responses.
   serviceName: 'Product Service', // Sets the service display name.
   // HTTP port used when the service starts.
-  port: Number(process.env.PRODUCT_PORT || 3001), // Sets the service HTTP port.
+  port: Number(process.env.PRODUCT_PORT || 3008), // Sets the service HTTP port.(3001)
   // Service data label used by the simple prototype state store.
   dataFile: 'products', // Labels the service data collection.
 }; // Ends the exported configuration object.
