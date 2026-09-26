@@ -36,7 +36,9 @@ app.get("/health", (req, res) => res.json({ status: "ok", service: config.servic
 app.get("/inventory/:productId", getStock); // Registers the stock lookup endpoint.
 app.post("/inventory/:productId/reserve", reserveStock); // Registers the stock reservation endpoint.
 
-if (require.main === module) { // Runs the server only for direct execution.
+// Runs the server only for direct execution.
+
+if (require.main === module) { 
   app.listen(config.port, () => console.log(`${config.serviceName} listening on ${config.port}`)); // Starts the HTTP server.
 } // Ends the direct-execution check.
 

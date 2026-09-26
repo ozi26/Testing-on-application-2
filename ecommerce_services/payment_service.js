@@ -25,4 +25,5 @@ if (require.main === module) { // Starts the server only for direct execution.
   app.listen(config.port, () => console.log(`${config.serviceName} listening on ${config.port}`)); // Starts the HTTP server.
 } // Ends the direct-execution condition.
 
-module.exports = { app, payments }; // Exports the app and state for tests.
+// Exports the app and state for tests.
+module.exports = { app, payments }; 
