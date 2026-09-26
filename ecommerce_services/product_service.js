@@ -12,12 +12,16 @@ const products = [ // Stores sample catalog data in memory for this deployable p
   { id: "p102", name: "USB-C Hub", price: 29.99, currency: "USD" }, // Defines the third product.
 ]; // Ends the sample product list.
 
-/** Returns all products in the catalog. */ // Documents the purpose of the route handler.
+/** Returns all products in the catalog. */ 
+// Documents the purpose of the route handler.
+
 function listProducts(req, res) { // Defines the catalog listing handler.
   return res.json({ service: config.serviceName, products }); // Sends the service name and product list as JSON.
 } // Ends the list handler.
 
-/** Returns one product by its identifier. */ // Documents the purpose of the route handler.
+/** Returns one product by its identifier. */ 
+// Documents the purpose of the route handler.
+
 function getProduct(req, res) { // Defines the product lookup handler.
   const product = products.find((item) => item.id === req.params.id); // Searches the catalog for the requested identifier.
   if (!product) return res.status(404).json({ error: "Product not found" }); // Returns a clear error when the product does not exist.
