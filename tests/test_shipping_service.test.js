@@ -1,6 +1,6 @@
 // Shipping Service Tests: verifies shipment creation and tracking.
 const request = require("supertest"); // Imports Supertest for HTTP tests.
-const { app, shipments } = require("../sample_microservices/shipping_service"); // Imports the service app and state.
+const { app, shipments } = require("../ecommerce_services/shipping_service"); // Imports the service app and state.
 
 beforeEach(() => shipments.clear()); // Clears shipment state before each test.
 

@@ -1,6 +1,6 @@
 // User Service Tests: verifies registration and customer lookup.
 const request = require("supertest"); // Imports Supertest for HTTP tests.
-const { app, users } = require("../sample_microservices/user_service"); // Imports the service app and user state.
+const { app, users } = require("../ecommerce_services/user_service"); // Imports the service app and user state.
 
 beforeEach(() => users.clear()); // Clears customer state before each test.
 

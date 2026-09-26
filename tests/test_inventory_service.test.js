@@ -1,6 +1,6 @@
 // Inventory Service Tests: verifies stock lookup and reservation.
 const request = require("supertest"); // Imports Supertest for HTTP testing.
-const { app, inventory } = require("../sample_microservices/inventory_service"); // Imports the service app and state.
+const { app, inventory } = require("../ecommerce_services/inventory_service"); // Imports the service app and state.
 
 beforeEach(() => inventory.set("p100", 20)); // Resets the main stock item before each test.
 

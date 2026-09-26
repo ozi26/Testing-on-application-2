@@ -1,6 +1,6 @@
 // Cart Service Tests: verifies cart creation and updates.
 const request = require("supertest"); // Imports Supertest for HTTP testing.
-const { app, carts } = require("../sample_microservices/cart_service"); // Imports the app and cart store.
+const { app, carts } = require("../ecommerce_services/cart_service"); // Imports the app and cart store.
 
 beforeEach(() => carts.clear()); // Clears all carts before every test.
 

@@ -1,6 +1,6 @@
 // Order Service Tests: verifies the cross-service order workflow with mocked HTTP dependencies.
 const request = require("supertest"); // Imports Supertest for HTTP testing.
-const { app, orders } = require("../sample_microservices/order_service"); // Imports the order app and state.
+const { app, orders } = require("../ecommerce_services/order_service"); // Imports the order app and state.
 
 beforeEach(() => orders.splice(0)); // Clears orders before each test.
 

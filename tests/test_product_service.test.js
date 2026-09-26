@@ -1,6 +1,6 @@
 // Product Service Tests: verifies catalog logic and HTTP behavior.
 const request = require("supertest"); // Imports Supertest for HTTP-level testing.
-const { app, products } = require("../sample_microservices/product_service"); // Imports the service app and catalog.
+const { app, products } = require("../ecommerce_services/product_service"); // Imports the service app and catalog.
 
 test("product list contains sample products", async () => { // Defines a unit-style catalog test.
   expect(products.length).toBeGreaterThanOrEqual(3); // Confirms the catalog has enough sample data.

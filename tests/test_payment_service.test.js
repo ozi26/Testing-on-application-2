@@ -1,6 +1,6 @@
 // Payment Service Tests: verifies successful and invalid simulated payments.
 const request = require("supertest"); // Imports Supertest for HTTP tests.
-const { app, payments } = require("../sample_microservices/payment_service"); // Imports the app and payment state.
+const { app, payments } = require("../ecommerce_services/payment_service"); // Imports the app and payment state.
 
 beforeEach(() => payments.splice(0)); // Clears payment state before each test.
 
