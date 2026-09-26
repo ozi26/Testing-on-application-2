@@ -351,9 +351,9 @@ def analyze_changes(repo_path=".", commit_range="HEAD~1..HEAD", test_dir="tests"
     print("\n[Step 5] Ranking tests by relevance...")
 
     # Weighting: service relevance is dominant, lexical is secondary
-    WEIGHT_LEXICAL = 0.4
-    WEIGHT_SERVICE = 0.6
-    THRESHOLD = 0.30
+    WEIGHT_LEXICAL = 0.2
+    WEIGHT_SERVICE = 0.8
+    THRESHOLD = 0.45
 
     scored_tests = []
     for test_file in test_files:

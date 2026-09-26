@@ -224,33 +224,7 @@ print('All critical imports OK')
             steps {
                 echo '=== [7/9] Analysis Summary ==='
 
-                sh """
-                    ${VENV_DIR}/bin/python -c "
-import json
-with open('${RESULT_FILE}', 'r') as f:
-    result = json.load(f)
-
-print('=' * 60)
-print('ANALYSIS SUMMARY')
-print('=' * 60)
-print(f'Has affected tests : {result.get(\\'has_affected_tests\\', False)}')
-print(f'Test count         : {result.get(\\'test_count\\', 0)}')
-
-summary = result.get('summary', {})
-if summary:
-    print()
-    print('Changed files    : ' + str(len(summary.get('changed_files', []))))
-    print('Source files     : ' + str(len(summary.get('source_files', []))))
-    print('Config files     : ' + str(len(summary.get('config_files', []))))
-    print('Total tests      : ' + str(summary.get('total_tests_analyzed', 0)))
-
-print()
-print('Affected tests:')
-for test in result.get('affected_tests', []):
-    print('  - ' + test)
-print('=' * 60)
-"
-                """
+                sh "${VENV_DIR}/bin/python ${ANALYZER_DIR}/show_summary.py ${RESULT_FILE}"
             }
         }
 
