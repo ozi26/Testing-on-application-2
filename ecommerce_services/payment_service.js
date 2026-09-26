@@ -21,7 +21,8 @@ function processPayment(req, res) { // Defines the payment handler.
 app.get("/health", (req, res) => res.json({ status: "ok", service: config.serviceName })); // Provides a health endpoint.
 app.post("/payments", processPayment); // Registers the payment endpoint.
 
-if (require.main === module) { // Starts the server only for direct execution.
+// Starts the server only for direct execution.
+if (require.main === module) { 
   app.listen(config.port, () => console.log(`${config.serviceName} listening on ${config.port}`)); // Starts the HTTP server.
 } // Ends the direct-execution condition.
 
