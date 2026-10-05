@@ -10,7 +10,8 @@ const carts = new Map(); // Stores carts by user identifier in memory.
 
 /** Returns the cart belonging to a user. */ 
 // Documents the cart lookup function.
-// This is just a random comment to test the anayzer..
+
+// This is a armless comment, for testing the analyzer...
 
 function getCart(req, res) { // Defines the cart lookup handler.
   const cart = carts.get(req.params.userId) || []; // Reads the cart or returns an empty list.

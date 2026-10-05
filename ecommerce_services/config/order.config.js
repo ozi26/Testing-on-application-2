@@ -1,5 +1,7 @@
 // Configuration for the Order Service; this file keeps service settings in one central config folder.
 
+// This is a armless comment, for testing the analyzer...
+
 module.exports = { // Starts the exported configuration object.
   // Service name used in logs and health responses.
   serviceName: 'Order Service', // Sets the service display name.

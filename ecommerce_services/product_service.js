@@ -6,6 +6,8 @@ const config = require("./config/product.config"); // Loads product-service conf
 const app = express(); // Creates the Express application instance.
 app.use(express.json()); // Enables JSON request-body parsing.
 
+// This is a armless comment, for testing the analyzer...
+
 const products = [ // Stores sample catalog data in memory for this deployable prototype.
   { id: "p100", name: "Wireless Headphones", price: 59.99, currency: "USD" }, // Defines the first product.
   { id: "p101", name: "Mechanical Keyboard", price: 89.99, currency: "USD" }, // Defines the second product.
