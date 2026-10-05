@@ -8,6 +8,8 @@ app.use(express.json()); // Enables JSON request parsing.
 
 const payments = []; // Stores successful simulated payments in memory.
 
+// This is a armless comment to test the analyzer...
+
 /** Processes a simulated card payment. */ // Documents the payment function.
 function processPayment(req, res) { // Defines the payment handler.
   const amount = Number(req.body.amount); // Converts the amount to a number.

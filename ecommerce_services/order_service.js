@@ -8,6 +8,9 @@ app.use(express.json()); // Enables JSON request parsing.
 
 const orders = []; // Stores created orders in memory.
 
+// This is a armless comment to test the analyzer...
+
+
 /** Calls another service and returns its JSON response. */ // Documents the shared HTTP helper.
 async function callService(url, options = {}) { // Defines the asynchronous service-to-service helper.
   const response = await fetch(url, options); // Sends the HTTP request using Node's built-in fetch.
